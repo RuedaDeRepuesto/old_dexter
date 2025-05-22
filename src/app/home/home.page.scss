@@ -1,0 +1,115 @@
+ion-content{
+  --background:none;
+  background-color: #dc0a2d;
+  height: 100%;
+}
+
+
+div{
+}
+
+.bottom{
+  height: calc(100% - 92px);
+  padding:6px;
+  .inner{
+    height: 100%;
+    border:3px solid #250705;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.top{
+  padding:12px;
+  background-color: #e2183a;
+  box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.25);
+}
+
+.blue-circle{
+  width: 70px;
+  height: 70px;
+  background-color:  #eeeeee;
+  padding:4px;
+  border-radius: 50%;
+  border:3px solid #250705;
+  .ball{
+    width: 100%;
+    height: 100%;
+    background-color: #27abfd;
+    background: radial-gradient(circle at 50% 50%, #27abfd 40%, #1e90f7 100%);
+    
+    border-radius: 50%;
+    border:3px solid #250705;
+  }
+  
+}
+
+.screen-container{
+  margin-top:32px;
+  border-radius: 5px;
+  border:3px solid #250705;
+  padding:24px;
+  background-color: #dedede;
+
+  .screen{
+    background-color: #242424;
+    width: 280px;
+    height: 200px;
+    border-radius: 5px;
+    border:3px solid #250705;
+    img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+}
+
+.bottom-buttons{
+  display: flex;
+  justify-content: space-evenly;
+  padding-bottom: 24px;
+  width: 100%;
+  
+}
+
+.pantalla-baja{
+    width: 280px;
+    height: 220px;
+    background-color: #51ad60;
+    border-radius: 5px;
+    border:3px solid #250705;
+    overflow-y: scroll;
+
+    .screen-btn{
+      width: 100%;
+      border:none;
+      background-color: transparent;
+      text-align: left;
+      font-family: lcddot;
+      font-size: 1.5rem;
+      padding:4px 8px;
+      color:#250705;
+      font-weight: bold;
+
+      &.selected{
+        background-color: #202020;
+        color:#51ad60;
+      }
+    }
+}
+
+.dex-button{
+  border:3px solid #250705;
+  border-radius: 50%;
+  background-color: #02302d;
+  width: 50px;
+  height: 50px;
+
+  &:active{
+    background-color: #030707;
+  }
+}

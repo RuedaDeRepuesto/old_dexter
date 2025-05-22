@@ -1,0 +1,41 @@
+
+
+<ion-content [fullscreen]="true" scrollY="false">
+  <div class="top">
+    <div class="blue-circle">
+      <div class="ball"></div>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="inner">
+      <div class="screen-container">
+        <div class="screen">
+          @if(currentPoke){
+            <img [src]="'https://projectpokemon.org/images/normal-sprite/'+currentPoke.name+'.gif'" >
+          }
+        </div>
+      </div>
+      <div class="espacer">
+          <div class="pantalla-baja">
+            @for (i of pokeList; track $index) {
+              <button class="screen-btn" (click)="change($index)" [class.selected]="selected == $index">{{i.name}}</button>
+            }
+            
+          </div>
+      </div>
+      <div class="bottom-buttons">
+        <div class="left">
+          <button class="dex-button" (click)="cry()"></button>
+        </div>
+        <div class="center">
+          
+        </div>
+        <div class="right">
+          <button class="dex-button" (click)="talk()"></button>
+          <button class="dex-button" (click)="talkTypes()"></button>
+        </div>
+    </div>
+    </div>
+    
+  </div>
+</ion-content>
