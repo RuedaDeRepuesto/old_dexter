@@ -1,5 +1,3 @@
-
-
 <ion-content [fullscreen]="true" scrollY="false">
   <div class="top">
     <div class="blue-circle">
@@ -17,22 +15,43 @@
       </div>
       <div class="espacer">
           <div class="pantalla-baja">
-            @for (i of pokeList; track $index) {
-              <button class="screen-btn" (click)="change($index)" [class.selected]="selected == $index">{{i.name}}</button>
+            @if (mode === 'list') {
+              @for (i of pokeList; track $index) {
+                <button class="screen-btn" (click)="change($index)" [class.selected]="selected == $index">{{i.name}}</button>
+              }
+            } @else if (mode === 'stats') {
+              <div class="stats-container">
+                @if (currentPoke) {
+                  @for (stat of currentPoke.stats; track $index) {
+                    <div class="stat-row">
+                      <span>{{stat.stat.name}}</span>
+                      <span>{{stat.base_stat}}</span>
+                    </div>
+                  }
+                }
+              </div>
+            } @else if (mode === 'moves') {
+              <div class="moves-container">
+                @for (move of levelMoves; track $index) {
+                  <div class="move-row">
+                    <span>Lv. {{move.level}}</span>
+                    <span>{{move.name}}</span>
+                  </div>
+                }
+              </div>
             }
-            
           </div>
       </div>
       <div class="bottom-buttons">
         <div class="left">
-          <button class="dex-button" (click)="cry()"></button>
+          <button class="dex-button" (click)="talk()"></button>
         </div>
         <div class="center">
           
         </div>
         <div class="right">
-          <button class="dex-button" (click)="talk()"></button>
-          <button class="dex-button" (click)="talkTypes()"></button>
+          <button class="dex-button" (click)="toggleStatsMode()"></button>
+          <button class="dex-button" (click)="toggleMovesMode()"></button>
         </div>
     </div>
     </div>
