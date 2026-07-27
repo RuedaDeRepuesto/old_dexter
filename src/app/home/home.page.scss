@@ -138,3 +138,23 @@ div{
     background-color: #030707;
   }
 }
+
+.camera-button {
+  border: 3px solid #250705;
+  border-radius: 50%;
+  background-color: #27abfd;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  color: #250705;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+  
+  &:active {
+    background-color: #1e90f7;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
+    transform: translateY(2px);
+  }
+}

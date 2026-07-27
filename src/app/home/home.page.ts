@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { AppService } from '../services/app.service';
 import { NamedAPIResource, Pokemon } from 'pokenode-ts';
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { lastValueFrom, timer } from 'rxjs';
 
 @Component({
@@ -136,5 +137,50 @@ export class HomePage implements OnInit {
    */
   toggleMovesMode() {
     this.mode = this.mode === 'moves' ? 'list' : 'moves';
+  }
+
+  /**
+   * Abre la cámara, escanea un Pokémon, lo identifica y lo selecciona
+   */
+  async scanPokemon() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Camera
+      });
+
+      if (image.base64String) {
+        const loader = await this.appSrv.showLoader('Analizando imagen...');
+        
+        try {
+          // Convert base64 to Blob
+          const byteCharacters = atob(image.base64String);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], {type: `image/${image.format}`});
+          
+          const pokemonName = await this.appSrv.identifyPokemon(blob);
+          
+          // Buscar el índice del pokemon identificado
+          const index = this.pokeList.findIndex(p => p.name.toLowerCase() === pokemonName);
+          
+          if (index !== -1) {
+            await this.change(index);
+          } else {
+            console.error('Pokémon no encontrado en la lista:', pokemonName);
+            alert(`No se encontró al Pokémon ${pokemonName} en la Pokédex.`);
+          }
+        } finally {
+          loader.dismiss();
+        }
+      }
+    } catch (e) {
+      console.error('Error al usar la cámara:', e);
+    }
   }
 }
