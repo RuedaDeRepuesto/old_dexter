@@ -220,12 +220,12 @@ ion-content {
   border: none;
   background-color: transparent;
   font-family: 'Press Start 2P', 'lcddot', monospace;
-  font-size: 0.52rem;
-  padding: 6px 8px;
+  font-size: 0.65rem;
+  padding: 9px 10px;
   color: $gb-dark;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   border-bottom: 1px solid rgba(15, 56, 15, 0.22);
   cursor: pointer;
   text-align: left;
@@ -241,10 +241,10 @@ ion-content {
   }
 
   .poke-num {
-    font-size: 0.42rem;
+    font-size: 0.52rem;
     opacity: 0.6;
     flex-shrink: 0;
-    min-width: 30px;
+    min-width: 36px;
   }
 
   .poke-name-list {
@@ -252,7 +252,7 @@ ion-content {
   }
 
   .poke-arrow {
-    font-size: 10px;
+    font-size: 12px;
     flex-shrink: 0;
   }
 }
@@ -265,39 +265,39 @@ ion-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 8px;
+  padding: 8px 10px;
   background-color: rgba(15, 56, 15, 0.2);
   border-bottom: 2px solid $gb-dark;
 
   .poke-id-name {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
   }
 
   .detail-num {
-    font-size: 0.4rem;
+    font-size: 0.52rem;
     color: $gb-dark;
     opacity: 0.58;
   }
 
   .detail-name {
-    font-size: 0.56rem;
+    font-size: 0.72rem;
     color: $gb-dark;
   }
 
   .type-chips {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
     align-items: flex-end;
   }
 }
 
 .type-chip {
-  padding: 2px 6px;
+  padding: 3px 7px;
   border-radius: 3px;
-  font-size: 0.36rem;
+  font-size: 0.48rem;
   border: 1px solid rgba(0, 0, 0, 0.3);
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
@@ -346,18 +346,18 @@ ion-content {
   border: none;
   border-right: 1px solid $gb-dark;
   background: transparent;
-  padding: 5px 2px 4px;
+  padding: 7px 2px 6px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.34rem;
+  font-size: 0.46rem;
   color: $gb-dark;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   transition: background-color 0.1s;
 
-  ion-icon  { font-size: 12px; pointer-events: none; }
+  ion-icon  { font-size: 16px; pointer-events: none; }
   span      { line-height: 1; }
 
   &:last-child { border-right: none; }
@@ -386,40 +386,40 @@ ion-content {
 // STATS TAB
 // ══════════════════════════════════════════════════════════════════════════════
 .stats-content {
-  padding: 8px 10px;
+  padding: 14px 14px 10px;
 }
 
 .stat-row {
   display: grid;
-  grid-template-columns: 52px 30px 1fr;
+  grid-template-columns: 68px 38px 1fr;
   align-items: center;
-  gap: 5px;
-  margin-bottom: 7px;
+  gap: 8px;
+  margin-bottom: 14px;
 
   &.stat-total {
-    margin-top: 6px;
-    padding-top: 6px;
-    border-top: 1px solid rgba(15, 56, 15, 0.45);
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid rgba(15, 56, 15, 0.45);
   }
 }
 
 .stat-label {
-  font-size: 0.4rem;
+  font-size: 0.55rem;
   color: $gb-dark;
   text-align: right;
 }
 
 .stat-val {
-  font-size: 0.46rem;
+  font-size: 0.62rem;
   color: $gb-dark;
   text-align: right;
 }
 
 .stat-bar-track {
-  height: 9px;
+  height: 14px;
   background: rgba(15, 56, 15, 0.22);
   border: 1px solid rgba(15, 56, 15, 0.45);
-  border-radius: 2px;
+  border-radius: 3px;
   overflow: hidden;
 }
 
@@ -441,16 +441,16 @@ ion-content {
 }
 
 .loading-progress {
-  padding: 6px 8px;
-  font-size: 0.36rem;
+  padding: 8px 10px;
+  font-size: 0.52rem;
   color: $gb-dark;
 
   .prog-track {
-    height: 7px;
+    height: 10px;
     background: rgba(15, 56, 15, 0.22);
     border: 1px solid rgba(15, 56, 15, 0.45);
-    border-radius: 2px;
-    margin-top: 4px;
+    border-radius: 3px;
+    margin-top: 6px;
     overflow: hidden;
 
     .prog-fill {
@@ -463,12 +463,12 @@ ion-content {
 
 .move-table-header {
   display: grid;
-  grid-template-columns: 16px 1fr 30px 24px 24px 24px;
-  gap: 2px;
-  padding: 4px 4px 3px;
+  grid-template-columns: 22px 1fr 38px 30px 30px 30px;
+  gap: 3px;
+  padding: 6px 6px 5px;
   border-bottom: 2px solid $gb-dark;
   background: rgba(15, 56, 15, 0.28);
-  font-size: 0.3rem;
+  font-size: 0.44rem;
   color: $gb-dark;
   position: sticky;
   top: 0;
@@ -477,29 +477,29 @@ ion-content {
 
 .move-row {
   display: grid;
-  grid-template-columns: 16px 1fr 30px 24px 24px 24px;
-  gap: 2px;
-  padding: 3px 4px;
+  grid-template-columns: 22px 1fr 38px 30px 30px 30px;
+  gap: 3px;
+  padding: 6px 6px;
   border-bottom: 1px solid rgba(15, 56, 15, 0.18);
-  font-size: 0.34rem;
+  font-size: 0.5rem;
   color: $gb-dark;
   align-items: center;
 
   &:hover { background: rgba(15, 56, 15, 0.12); }
 }
 
-.mc-lv  { text-align: right; font-size: 0.3rem; }
+.mc-lv  { text-align: right; font-size: 0.44rem; }
 .mc-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.3rem;
+  font-size: 0.44rem;
   letter-spacing: -0.3px;
 }
 
 .mc-type {
-  font-size: 0.27rem;
-  padding: 1px 2px;
+  font-size: 0.38rem;
+  padding: 2px 2px;
   border-radius: 2px;
   text-align: center;
   color: white;
@@ -510,7 +510,7 @@ ion-content {
 .type-badge { }
 
 .mc-cat {
-  font-size: 0.3rem;
+  font-size: 0.44rem;
   text-align: center;
 
   &.cat-physical { color: #992200; font-weight: bold; }
@@ -518,12 +518,12 @@ ion-content {
   &.cat-status   { color: #556655; }
 }
 
-.mc-pow, .mc-acc { text-align: right; font-size: 0.32rem; }
+.mc-pow, .mc-acc { text-align: right; font-size: 0.44rem; }
 
 .mc-loading {
   grid-column: 3 / -1;
   text-align: center;
-  font-size: 0.34rem;
+  font-size: 0.5rem;
   color: rgba(15, 56, 15, 0.38);
   animation: blink-dot 1.2s step-end infinite;
 }
@@ -537,49 +537,49 @@ ion-content {
 // ABILITY TAB
 // ══════════════════════════════════════════════════════════════════════════════
 .ability-content {
-  padding: 8px;
+  padding: 14px 12px;
 }
 
 .ability-card {
-  border: 1px solid $gb-dark;
-  border-radius: 3px;
-  padding: 7px 8px;
-  margin-bottom: 8px;
+  border: 2px solid $gb-dark;
+  border-radius: 4px;
+  padding: 14px 12px;
+  margin-bottom: 16px;
   background: rgba(15, 56, 15, 0.12);
 }
 
 .ability-header {
   display: flex;
   align-items: center;
-  gap: 5px;
-  margin-bottom: 5px;
+  gap: 8px;
+  margin-bottom: 10px;
 
   ion-icon {
-    font-size: 13px;
+    font-size: 20px;
     color: $gb-dark;
     flex-shrink: 0;
   }
 
   .ability-name {
     flex: 1;
-    font-size: 0.46rem;
+    font-size: 0.65rem;
     color: $gb-dark;
   }
 
   .hidden-badge {
-    font-size: 0.3rem;
+    font-size: 0.42rem;
     background: $gb-dark;
     color: $gb-green;
-    padding: 2px 4px;
-    border-radius: 2px;
+    padding: 3px 6px;
+    border-radius: 3px;
   }
 }
 
 .ability-desc {
   margin: 0;
-  font-size: 0.37rem;
+  font-size: 0.52rem;
   color: $gb-dark;
-  line-height: 1.9;
+  line-height: 2.1;
   font-family: 'Press Start 2P', monospace;
 }
 
