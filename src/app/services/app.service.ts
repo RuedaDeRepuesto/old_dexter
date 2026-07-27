@@ -1,7 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { LoadingController } from "@ionic/angular";
-import { PokemonClient } from 'pokenode-ts';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { PokemonClient, MoveClient } from 'pokenode-ts';
+import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 
 export interface PokemonClassificationResult {
@@ -14,7 +14,9 @@ export interface PokemonClassificationResult {
 })
 export class AppService{
 
-    api:PokemonClient;
+    api: PokemonClient;
+    moveApi: MoveClient;
+
     private readonly http = inject(HttpClient);
     private readonly loadinCtrl = inject(LoadingController);
 
@@ -22,37 +24,36 @@ export class AppService{
 
     constructor(){
         this.api = new PokemonClient();
+        this.moveApi = new MoveClient();
     }
-
 
     /**
      * Muestra un loader en pantalla
-     * @param msg Mensaje a mostrar
-     * @returns Instancia del loader
+     * @param msg Mensaje a mostrar en el loader
+     * @returns Instancia del loader presentado
      */
-    async showLoader(msg:string){
-        const loader = await this.loadinCtrl.create({message:msg,duration:99999999,backdropDismiss:false});
+    async showLoader(msg: string) {
+        const loader = await this.loadinCtrl.create({ message: msg, duration: 99999999, backdropDismiss: false });
         await loader.present();
         return loader;
     }
 
     /**
-     * Identifica un pokemon a partir de un archivo de imagen utilizando nuestro servidor en Cloud Run
+     * Identifica un pokemon a partir de un blob de imagen usando el servidor Cloud Run
      * @param imageBlob Blob de la imagen capturada por la cámara
-     * @returns El nombre del Pokemon identificado (en minúsculas)
+     * @returns Nombre del Pokemon identificado en minúsculas
      */
     async identifyPokemon(imageBlob: Blob): Promise<string> {
         const formData = new FormData();
         formData.append('file', imageBlob, 'image.jpg');
 
-        const request$ = this.http.post<{result: PokemonClassificationResult[]}>(
-            this.CLOUD_RUN_API_URL, 
+        const request$ = this.http.post<{ result: PokemonClassificationResult[] }>(
+            this.CLOUD_RUN_API_URL,
             formData
         );
-        
+
         const response = await lastValueFrom(request$);
         const topResult = response.result.sort((a, b) => b.score - a.score)[0];
-        
         return topResult.label.toLowerCase();
     }
 }

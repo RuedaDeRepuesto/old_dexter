@@ -1,62 +1,245 @@
 <ion-content [fullscreen]="true" scrollY="false">
+
+  <!-- ══════════════════════════════════════
+       TOP BAR: Camera (left) + Ball + Lights
+       ══════════════════════════════════════ -->
   <div class="top">
-    <div class="blue-circle">
-      <div class="ball"></div>
+    <button class="camera-button" (click)="scanPokemon()" id="btn-camera" title="Escanear Pokémon">
+      <ion-icon name="camera-outline"></ion-icon>
+    </button>
+
+    <div class="top-center">
+      <div class="blue-circle">
+        <div class="ball"></div>
+      </div>
+    </div>
+
+    <div class="indicator-lights">
+      <div class="light red-light"></div>
+      <div class="light yellow-light"></div>
+      <div class="light green-light"></div>
     </div>
   </div>
+
+  <!-- ══════════════════════════════════════
+       BODY
+       ══════════════════════════════════════ -->
   <div class="bottom">
     <div class="inner">
+
+      <!-- PANTALLA SUPERIOR (GIF del pokemon) -->
       <div class="screen-container">
         <div class="screen">
-          @if(currentPoke){
-            <img [src]="'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/'+currentPoke.id+'.gif'" >
+          @if (currentPoke) {
+            <img
+              [src]="'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/' + currentPoke.id + '.gif'"
+              [alt]="currentPoke.name"
+            >
+          } @else {
+            <div class="screen-empty">
+              <ion-icon name="help-circle-outline"></ion-icon>
+            </div>
           }
         </div>
       </div>
+
+      <!-- PANTALLA INFERIOR (lista o detalle) -->
       <div class="espacer">
-          <div class="pantalla-baja">
-            @if (mode === 'list') {
-              @for (i of pokeList; track $index) {
-                <button class="screen-btn" (click)="change($index)" [class.selected]="selected == $index">{{i.name}}</button>
-              }
-            } @else if (mode === 'stats') {
-              <div class="stats-container">
-                @if (currentPoke) {
+        <div class="pantalla-baja" [class.detail-mode]="mode === 'detail'">
+
+          <!-- ── MODO LISTA ── -->
+          @if (mode === 'list') {
+            @for (poke of pokeList; track $index) {
+              <button
+                class="screen-btn"
+                (click)="change($index)"
+                [class.selected]="selected === $index"
+                [id]="'poke-' + $index"
+              >
+                <span class="poke-num">#{{ ($index + 1).toString().padStart(3, '0') }}</span>
+                <span class="poke-name-list">{{ poke.name.split('-').join(' ').toUpperCase() }}</span>
+                @if (selected === $index) {
+                  <ion-icon name="chevron-forward-outline" class="poke-arrow"></ion-icon>
+                }
+              </button>
+            }
+          }
+
+          <!-- ── MODO DETALLE ── -->
+          @else if (mode === 'detail' && currentPoke) {
+
+            <!-- Header: número + nombre + tipos -->
+            <div class="detail-header">
+              <div class="poke-id-name">
+                <span class="detail-num">#{{ currentPoke.id.toString().padStart(3, '0') }}</span>
+                <span class="detail-name">{{ formatName(currentPoke.name) }}</span>
+              </div>
+              <div class="type-chips">
+                @for (t of currentPoke.types; track $index) {
+                  <span class="type-chip type-{{ t.type.name }}">{{ t.type.name.toUpperCase() }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Menú retro de tabs -->
+            <div class="retro-tabs">
+              <button
+                class="tab-btn"
+                [class.active]="detailTab === 'stats'"
+                (click)="setDetailTab('stats')"
+                id="tab-stats"
+              >
+                <ion-icon name="bar-chart-outline"></ion-icon>
+                <span>STATS</span>
+              </button>
+              <button
+                class="tab-btn"
+                [class.active]="detailTab === 'moves'"
+                (click)="setDetailTab('moves')"
+                id="tab-moves"
+              >
+                <ion-icon name="flash-outline"></ion-icon>
+                <span>ATAQUES</span>
+              </button>
+              <button
+                class="tab-btn"
+                [class.active]="detailTab === 'ability'"
+                (click)="setDetailTab('ability')"
+                id="tab-ability"
+              >
+                <ion-icon name="sparkles-outline"></ion-icon>
+                <span>HABILIDAD</span>
+              </button>
+            </div>
+
+            <!-- Contenido del tab seleccionado -->
+            <div class="detail-content">
+
+              <!-- ·· STATS ·· -->
+              @if (detailTab === 'stats') {
+                <div class="stats-content">
                   @for (stat of currentPoke.stats; track $index) {
                     <div class="stat-row">
-                      <span>{{stat.stat.name}}</span>
-                      <span>{{stat.base_stat}}</span>
+                      <span class="stat-label">{{ statLabels[stat.stat.name] || stat.stat.name }}</span>
+                      <span class="stat-val">{{ stat.base_stat }}</span>
+                      <div class="stat-bar-track">
+                        <div
+                          class="stat-bar-fill {{ getStatClass(stat.base_stat) }}"
+                          [style.width]="getStatPercent(stat.base_stat)"
+                        ></div>
+                      </div>
                     </div>
                   }
-                }
-              </div>
-            } @else if (mode === 'moves') {
-              <div class="moves-container">
-                @for (move of levelMoves; track $index) {
-                  <div class="move-row">
-                    <span>Lv. {{move.level}}</span>
-                    <span>{{move.name}}</span>
+                  <div class="stat-row stat-total">
+                    <span class="stat-label">TOTAL</span>
+                    <span class="stat-val">{{ totalStats }}</span>
+                    <div class="stat-bar-track">
+                      <div
+                        class="stat-bar-fill {{ getStatClass(totalStats / 6) }}"
+                        [style.width]="getStatPercent(totalStats / 6)"
+                      ></div>
+                    </div>
                   </div>
-                }
-              </div>
-            }
-          </div>
-      </div>
+                </div>
+              }
+
+              <!-- ·· ATAQUES ·· -->
+              @else if (detailTab === 'moves') {
+                <div class="moves-content">
+
+                  @if (movesLoading) {
+                    <div class="loading-progress">
+                      <span>CARGANDO... {{ movesLoadedCount }}/{{ moveDetails.length }}</span>
+                      <div class="prog-track">
+                        <div
+                          class="prog-fill"
+                          [style.width]="moveDetails.length ? (movesLoadedCount / moveDetails.length * 100) + '%' : '0%'"
+                        ></div>
+                      </div>
+                    </div>
+                  }
+
+                  <div class="move-table-header">
+                    <span class="mc-lv">LV</span>
+                    <span class="mc-name">NOMBRE</span>
+                    <span class="mc-type">TIPO</span>
+                    <span class="mc-cat">CAT</span>
+                    <span class="mc-pow">POW</span>
+                    <span class="mc-acc">ACC</span>
+                  </div>
+
+                  @for (move of moveDetails; track $index) {
+                    <div class="move-row">
+                      <span class="mc-lv">{{ move.level }}</span>
+                      <span class="mc-name">{{ formatName(move.name) }}</span>
+                      @if (move.loaded) {
+                        <span class="mc-type type-badge type-{{ move.type }}">{{ move.type.substring(0, 4).toUpperCase() }}</span>
+                        <span class="mc-cat cat-{{ move.damageClass }}">{{ getDmgClassLabel(move.damageClass) }}</span>
+                        <span class="mc-pow">{{ move.power ?? '—' }}</span>
+                        <span class="mc-acc">{{ move.accuracy ?? '—' }}</span>
+                      } @else {
+                        <span class="mc-loading">· · ·</span>
+                      }
+                    </div>
+                  }
+
+                </div>
+              }
+
+              <!-- ·· HABILIDAD ·· -->
+              @else if (detailTab === 'ability') {
+                <div class="ability-content">
+                  @for (ab of abilityDetails; track $index) {
+                    <div class="ability-card">
+                      <div class="ability-header">
+                        <ion-icon [name]="ab.isHidden ? 'eye-off-outline' : 'star-outline'"></ion-icon>
+                        <span class="ability-name">{{ formatName(ab.name) }}</span>
+                        @if (ab.isHidden) {
+                          <span class="hidden-badge">OCULTA</span>
+                        }
+                      </div>
+                      @if (!ab.loaded) {
+                        <p class="ability-desc">Cargando...</p>
+                      } @else {
+                        <p class="ability-desc">{{ ab.description || 'Sin descripción disponible.' }}</p>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+
+            </div><!-- /detail-content -->
+          }
+
+        </div><!-- /pantalla-baja -->
+      </div><!-- /espacer -->
+
+      <!-- BOTONES INFERIORES -->
       <div class="bottom-buttons">
-        <div class="left">
-          <button class="dex-button" (click)="talk()"></button>
+
+        <div class="btn-group btn-left">
+          @if (mode === 'detail') {
+            <button class="dex-button btn-back" (click)="goToList()" id="btn-back" title="Volver a la lista">
+              <ion-icon name="arrow-back-outline"></ion-icon>
+            </button>
+          }
         </div>
-        <div class="center">
-          <button class="camera-button" (click)="scanPokemon()">
-            <ion-icon name="camera"></ion-icon>
+
+        <div class="btn-group btn-center">
+          <button class="dex-button btn-sound" (click)="cry()" id="btn-cry" title="Escuchar cry">
+            <ion-icon name="musical-notes-outline"></ion-icon>
           </button>
         </div>
-        <div class="right">
-          <button class="dex-button" (click)="toggleStatsMode()"></button>
-          <button class="dex-button" (click)="toggleMovesMode()"></button>
+
+        <div class="btn-group btn-right">
+          <button class="dex-button btn-talk" (click)="talk()" id="btn-talk" title="Narrar descripción">
+            <ion-icon name="mic-outline"></ion-icon>
+          </button>
         </div>
-    </div>
-    </div>
-    
-  </div>
+
+      </div><!-- /bottom-buttons -->
+
+    </div><!-- /inner -->
+  </div><!-- /bottom -->
+
 </ion-content>
