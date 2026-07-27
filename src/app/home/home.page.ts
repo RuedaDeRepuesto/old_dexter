@@ -335,4 +335,73 @@ export class HomePage implements OnInit {
     if (dc === 'special') return 'ESP';
     return 'EST';
   }
+
+  // ── Radar chart ──────────────────────────────────────────────────────────
+
+  private readonly RADAR_R = 88;
+  private readonly RADAR_LR = 112;
+
+  private readonly STAT_POSITIONS = [
+    { key: 'hp',              label: 'HP'     },
+    { key: 'attack',          label: 'ATK'    },
+    { key: 'defense',         label: 'DEF'    },
+    { key: 'special-attack',  label: 'SP.ATK' },
+    { key: 'special-defense', label: 'SP.DEF' },
+    { key: 'speed',           label: 'VEL'    },
+  ];
+
+  /** Puntos precomputados para los 5 niveles del hexágono de fondo */
+  readonly radarGridLevels: string[] = [1, 2, 3, 4, 5].map(level => {
+    const r = (this.RADAR_R * level) / 5;
+    return Array.from({ length: 6 }, (_, i) => {
+      const a = -Math.PI / 2 + (i * Math.PI / 3);
+      return `${(r * Math.cos(a)).toFixed(1)},${(r * Math.sin(a)).toFixed(1)}`;
+    }).join(' ');
+  });
+
+  /** Extremos precomputados de los 6 ejes del radar */
+  readonly radarAxes = Array.from({ length: 6 }, (_, i) => {
+    const a = -Math.PI / 2 + (i * Math.PI / 3);
+    return {
+      x: (this.RADAR_R * Math.cos(a)).toFixed(1),
+      y: (this.RADAR_R * Math.sin(a)).toFixed(1),
+    };
+  });
+
+  /** Datos de vértices del radar para renderizar puntos, labels y valores */
+  get radarVertices() {
+    if (!this.currentPoke) return [];
+    const statsMap: Record<string, number> = {};
+    this.currentPoke.stats.forEach(s => statsMap[s.stat.name] = s.base_stat);
+
+    return this.STAT_POSITIONS.map((pos, i) => {
+      const angle = -Math.PI / 2 + (i * Math.PI / 3);
+      const value  = statsMap[pos.key] ?? 0;
+      const statR  = (value / 255) * this.RADAR_R;
+
+      const lx = this.RADAR_LR * Math.cos(angle);
+      const ly = this.RADAR_LR * Math.sin(angle);
+      const vx = statR * Math.cos(angle);
+      const vy = statR * Math.sin(angle);
+
+      let anchor = 'middle';
+      if (lx > 15) anchor = 'start';
+      else if (lx < -15) anchor = 'end';
+
+      return { label: pos.label, value, lx, ly, lvy: ly + 13, vx, vy, anchor };
+    });
+  }
+
+  /** String de puntos SVG para el polígono de stats del radar */
+  get radarPolygonPoints(): string {
+    if (!this.currentPoke) return '';
+    const statsMap: Record<string, number> = {};
+    this.currentPoke.stats.forEach(s => statsMap[s.stat.name] = s.base_stat);
+
+    return this.STAT_POSITIONS.map((pos, i) => {
+      const angle = -Math.PI / 2 + (i * Math.PI / 3);
+      const r = ((statsMap[pos.key] ?? 0) / 255) * this.RADAR_R;
+      return `${(r * Math.cos(angle)).toFixed(1)},${(r * Math.sin(angle)).toFixed(1)}`;
+    }).join(' ');
+  }
 }

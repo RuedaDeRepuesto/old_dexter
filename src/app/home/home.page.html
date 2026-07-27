@@ -118,30 +118,53 @@
               <!-- ·· STATS ·· -->
               @if (detailTab === 'stats') {
                 <div class="stats-content">
-                  @for (stat of currentPoke.stats; track $index) {
-                    <div class="stat-row">
-                      <span class="stat-label">{{ statLabels[stat.stat.name] || stat.stat.name }}</span>
-                      <span class="stat-val">{{ stat.base_stat }}</span>
-                      <div class="stat-bar-track">
-                        <div
-                          class="stat-bar-fill {{ getStatClass(stat.base_stat) }}"
-                          [style.width]="getStatPercent(stat.base_stat)"
-                        ></div>
-                      </div>
-                    </div>
-                  }
-                  <div class="stat-row stat-total">
-                    <span class="stat-label">TOTAL</span>
-                    <span class="stat-val">{{ totalStats }}</span>
-                    <div class="stat-bar-track">
-                      <div
-                        class="stat-bar-fill {{ getStatClass(totalStats / 6) }}"
-                        [style.width]="getStatPercent(totalStats / 6)"
-                      ></div>
-                    </div>
+
+                  <!-- Gráfico radar hexagonal -->
+                  <svg class="radar-chart" viewBox="-148 -130 296 282" xmlns="http://www.w3.org/2000/svg">
+
+                    <!-- Grid hexagons (5 niveles) -->
+                    @for (pts of radarGridLevels; track $index) {
+                      <polygon [attr.points]="pts" class="radar-grid" [class.radar-grid-outer]="$last" />
+                    }
+
+                    <!-- Ejes -->
+                    @for (ax of radarAxes; track $index) {
+                      <line x1="0" y1="0" [attr.x2]="ax.x" [attr.y2]="ax.y" class="radar-axis" />
+                    }
+
+                    <!-- Polígono de stats -->
+                    <polygon [attr.points]="radarPolygonPoints" class="radar-fill" />
+
+                    <!-- Puntos en vértices + Labels + Valores -->
+                    @for (v of radarVertices; track $index) {
+                      <circle [attr.cx]="v.vx" [attr.cy]="v.vy" r="4.5" class="radar-dot" />
+                      <text
+                        [attr.x]="v.lx"
+                        [attr.y]="v.ly"
+                        [attr.text-anchor]="v.anchor"
+                        dominant-baseline="middle"
+                        class="radar-label"
+                      >{{ v.label }}</text>
+                      <text
+                        [attr.x]="v.lx"
+                        [attr.y]="v.lvy"
+                        [attr.text-anchor]="v.anchor"
+                        dominant-baseline="middle"
+                        class="radar-value-text"
+                      >{{ v.value }}</text>
+                    }
+
+                  </svg>
+
+                  <!-- Total -->
+                  <div class="stat-total-row">
+                    <span>TOTAL</span>
+                    <span class="total-val">{{ totalStats }}</span>
                   </div>
+
                 </div>
               }
+
 
               <!-- ·· ATAQUES ·· -->
               @else if (detailTab === 'moves') {

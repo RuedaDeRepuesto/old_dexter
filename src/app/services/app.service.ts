@@ -5,14 +5,14 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 
 export interface PokemonClassificationResult {
-  label: string;
-  score: number;
+    label: string;
+    score: number;
 }
 
 @Injectable({
-    providedIn:'root'
+    providedIn: 'root'
 })
-export class AppService{
+export class AppService {
 
     api: PokemonClient;
     moveApi: MoveClient;
@@ -20,9 +20,9 @@ export class AppService{
     private readonly http = inject(HttpClient);
     private readonly loadinCtrl = inject(LoadingController);
 
-    private readonly CLOUD_RUN_API_URL = 'https://clasificador-pokemon-585351811529.us-central1.run.app/';
+    private readonly CLOUD_RUN_API_URL = 'https://dev.matiivilla.cl/jorge';
 
-    constructor(){
+    constructor() {
         this.api = new PokemonClient();
         this.moveApi = new MoveClient();
     }

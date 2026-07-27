@@ -383,55 +383,82 @@ ion-content {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// STATS TAB
+// STATS TAB — Radar Chart
 // ══════════════════════════════════════════════════════════════════════════════
 .stats-content {
-  padding: 14px 14px 10px;
+  padding: 10px 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.stat-row {
-  display: grid;
-  grid-template-columns: 68px 38px 1fr;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 14px;
+.radar-chart {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
 
-  &.stat-total {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 2px solid rgba(15, 56, 15, 0.45);
+.radar-grid {
+  fill: rgba(15, 56, 15, 0.07);
+  stroke: rgba(15, 56, 15, 0.28);
+  stroke-width: 0.8;
+
+  &.radar-grid-outer {
+    fill: rgba(15, 56, 15, 0.11);
+    stroke: rgba(15, 56, 15, 0.5);
+    stroke-width: 1.2;
   }
 }
 
-.stat-label {
-  font-size: 0.55rem;
+.radar-axis {
+  stroke: rgba(15, 56, 15, 0.28);
+  stroke-width: 0.7;
+  stroke-dasharray: 2 3;
+}
+
+.radar-fill {
+  fill: rgba(15, 80, 40, 0.42);
+  stroke: $gb-dark;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.radar-dot {
+  fill: $gb-dark;
+  stroke: $gb-green;
+  stroke-width: 1.5;
+}
+
+.radar-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.44rem;
+  fill: $gb-dark;
+}
+
+.radar-value-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.52rem;
+  fill: $gb-dark;
+  font-weight: bold;
+}
+
+.stat-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px 4px;
+  margin-top: 2px;
+  border-top: 2px solid rgba(15, 56, 15, 0.4);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.52rem;
   color: $gb-dark;
-  text-align: right;
+
+  .total-val {
+    font-size: 0.65rem;
+  }
 }
 
-.stat-val {
-  font-size: 0.62rem;
-  color: $gb-dark;
-  text-align: right;
-}
-
-.stat-bar-track {
-  height: 14px;
-  background: rgba(15, 56, 15, 0.22);
-  border: 1px solid rgba(15, 56, 15, 0.45);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.stat-bar-fill {
-  height: 100%;
-  transition: width 0.5s ease-out;
-
-  &.stat-excellent { background-color: #00cc44; }
-  &.stat-good      { background-color: #88cc00; }
-  &.stat-average   { background-color: #e8b800; }
-  &.stat-poor      { background-color: #cc2200; }
-}
 
 // ══════════════════════════════════════════════════════════════════════════════
 // MOVES TAB
