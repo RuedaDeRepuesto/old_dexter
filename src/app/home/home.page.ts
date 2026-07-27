@@ -57,6 +57,9 @@ export class HomePage implements OnInit {
   abilityDetails: AbilityDetail[] = [];
   abilitiesLoaded = false;
 
+  isLoading = false;
+  loadingMsg = '';
+
   readonly statLabels: Record<string, string> = {
     'hp': 'HP',
     'attack': 'ATK',
@@ -76,7 +79,7 @@ export class HomePage implements OnInit {
 
   /** Obtiene y carga todos los datos del pokemon seleccionado actualmente */
   async selectPoke() {
-    const loader = await this.appSrv.showLoader('Obteniendo datos...');
+    this.showLoading('BUSCANDO DATOS...');
     try {
       const pokeRes = this.pokeList[this.selected];
       const pokeData = await this.appSrv.api.getPokemonByName(pokeRes.name);
@@ -127,7 +130,7 @@ export class HomePage implements OnInit {
       this.abilitiesLoaded = false;
       this.movesLoadedCount = 0;
     } finally {
-      loader.dismiss();
+      this.hideLoading();
     }
   }
 
@@ -266,7 +269,7 @@ export class HomePage implements OnInit {
 
       if (!image.base64String) return;
 
-      const loader = await this.appSrv.showLoader('Analizando imagen...');
+      this.showLoading('ANALIZANDO...');
       try {
         const byteCharacters = atob(image.base64String);
         const byteArray = new Uint8Array(byteCharacters.length);
@@ -274,20 +277,43 @@ export class HomePage implements OnInit {
           byteArray[i] = byteCharacters.charCodeAt(i);
         }
         const blob = new Blob([byteArray], { type: `image/${image.format}` });
-        const pokemonName = await this.appSrv.identifyPokemon(blob);
+        const result = await this.appSrv.identifyPokemon(blob);
+
+        if (result.score < 0.5) {
+          alert(`Pokemon no reconocido (confianza: ${(result.score * 100).toFixed(0)}%).`);
+          return;
+        }
+
+        const pokemonName = result.label.toLowerCase();
         const index = this.pokeList.findIndex(p => p.name.toLowerCase() === pokemonName);
 
         if (index !== -1) {
+          this.hideLoading();
           await this.change(index);
         } else {
           alert(`No se encontró al Pokémon "${pokemonName}" en la Pokédex.`);
         }
       } finally {
-        loader.dismiss();
+        this.hideLoading();
       }
     } catch (e) {
       console.error('Error al usar la cámara:', e);
     }
+  }
+
+  /**
+   * Muestra un mensaje de carga en la pantalla superior retro
+   * @param msg Mensaje a mostrar
+   */
+  private showLoading(msg: string) {
+    this.isLoading = true;
+    this.loadingMsg = msg;
+  }
+
+  /** Oculta el mensaje de carga retro */
+  private hideLoading() {
+    this.isLoading = false;
+    this.loadingMsg = '';
   }
 
   /**

@@ -41,9 +41,9 @@ export class AppService {
     /**
      * Identifica un pokemon a partir de un blob de imagen usando el servidor Cloud Run
      * @param imageBlob Blob de la imagen capturada por la cámara
-     * @returns Nombre del Pokemon identificado en minúsculas
+     * @returns Resultado de clasificación con label y score
      */
-    async identifyPokemon(imageBlob: Blob): Promise<string> {
+    async identifyPokemon(imageBlob: Blob): Promise<PokemonClassificationResult> {
         const formData = new FormData();
         formData.append('file', imageBlob, 'image.jpg');
 
@@ -53,7 +53,6 @@ export class AppService {
         );
 
         const response = await lastValueFrom(request$);
-        const topResult = response.result.sort((a, b) => b.score - a.score)[0];
-        return topResult.label.toLowerCase();
+        return response.result.sort((a, b) => b.score - a.score)[0];
     }
 }
