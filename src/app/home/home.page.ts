@@ -59,6 +59,8 @@ export class HomePage implements OnInit {
 
   isLoading = false;
   loadingMsg = '';
+  errorMsg = '';
+  isSpeaking = false;
 
   readonly statLabels: Record<string, string> = {
     'hp': 'HP',
@@ -69,7 +71,7 @@ export class HomePage implements OnInit {
     'speed': 'VEL',
   };
 
-  constructor() {}
+  constructor() { }
 
   /** Inicializa el componente cargando la lista de pokemon */
   async ngOnInit() {
@@ -248,13 +250,18 @@ export class HomePage implements OnInit {
   }
 
   /**
-   * Usa el plugin TTS para leer texto
+   * Usa el plugin TTS para leer texto y activa la luz de la bolita mientras habla
    * @param texto Texto a sintetizar
    */
   async tts(texto: string) {
     await TextToSpeech.stop();
     await lastValueFrom(timer(100));
-    await TextToSpeech.speak({ text: texto, lang: 'es-es', category: 'ambient' });
+    this.isSpeaking = true;
+    try {
+      await TextToSpeech.speak({ text: texto, lang: 'es-es', category: 'ambient' });
+    } finally {
+      this.isSpeaking = false;
+    }
   }
 
   /** Abre la cámara, identifica el Pokémon fotografiado y navega a su detalle */
@@ -279,8 +286,8 @@ export class HomePage implements OnInit {
         const blob = new Blob([byteArray], { type: `image/${image.format}` });
         const result = await this.appSrv.identifyPokemon(blob);
 
-        if (result.score < 0.5) {
-          alert(`Pokemon no reconocido (confianza: ${(result.score * 100).toFixed(0)}%).`);
+        if (result.score < 0.3) {
+          await this.showError('! NO RECONOCIDO !');
           return;
         }
 
@@ -291,7 +298,7 @@ export class HomePage implements OnInit {
           this.hideLoading();
           await this.change(index);
         } else {
-          alert(`No se encontró al Pokémon "${pokemonName}" en la Pokédex.`);
+          await this.showError('! NO ENCONTRADO !');
         }
       } finally {
         this.hideLoading();
@@ -314,6 +321,19 @@ export class HomePage implements OnInit {
   private hideLoading() {
     this.isLoading = false;
     this.loadingMsg = '';
+  }
+
+  /**
+   * Muestra un mensaje de error en la pantalla retro y lo descarta automáticamente
+   * @param msg Mensaje a mostrar (sin detalles técnicos)
+   * @param duration Tiempo en ms antes de ocultar el mensaje
+   */
+  private async showError(msg: string, duration = 2200) {
+    this.isLoading = false;
+    this.loadingMsg = '';
+    this.errorMsg = msg;
+    await lastValueFrom(timer(duration));
+    this.errorMsg = '';
   }
 
   /**
@@ -368,12 +388,12 @@ export class HomePage implements OnInit {
   private readonly RADAR_LR = 112;
 
   private readonly STAT_POSITIONS = [
-    { key: 'hp',              label: 'HP'     },
-    { key: 'attack',          label: 'ATK'    },
-    { key: 'defense',         label: 'DEF'    },
-    { key: 'special-attack',  label: 'SP.ATK' },
+    { key: 'hp', label: 'HP' },
+    { key: 'attack', label: 'ATK' },
+    { key: 'defense', label: 'DEF' },
+    { key: 'special-attack', label: 'SP.ATK' },
     { key: 'special-defense', label: 'SP.DEF' },
-    { key: 'speed',           label: 'VEL'    },
+    { key: 'speed', label: 'VEL' },
   ];
 
   /** Puntos precomputados para los 5 niveles del hexágono de fondo */
@@ -402,8 +422,8 @@ export class HomePage implements OnInit {
 
     return this.STAT_POSITIONS.map((pos, i) => {
       const angle = -Math.PI / 2 + (i * Math.PI / 3);
-      const value  = statsMap[pos.key] ?? 0;
-      const statR  = (value / 255) * this.RADAR_R;
+      const value = statsMap[pos.key] ?? 0;
+      const statR = (value / 255) * this.RADAR_R;
 
       const lx = this.RADAR_LR * Math.cos(angle);
       const ly = this.RADAR_LR * Math.sin(angle);

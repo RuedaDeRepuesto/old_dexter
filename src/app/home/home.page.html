@@ -9,7 +9,7 @@
     </button>
 
     <div class="top-center">
-      <div class="blue-circle">
+      <div class="blue-circle" [class.speaking]="isSpeaking">
         <div class="ball"></div>
       </div>
     </div>
@@ -27,7 +27,7 @@
   <div class="bottom">
     <div class="inner">
 
-      <!-- PANTALLA SUPERIOR (GIF del pokemon / loading) -->
+      <!-- PANTALLA SUPERIOR (GIF del pokemon / loading / error) -->
       <div class="screen-container">
         <div class="screen">
           @if (isLoading) {
@@ -37,6 +37,11 @@
               <div class="loading-dots">
                 <span>■</span><span>■</span><span>■</span>
               </div>
+            </div>
+          } @else if (errorMsg) {
+            <div class="screen-error">
+              <div class="error-icon">!</div>
+              <div class="error-text">{{ errorMsg }}</div>
             </div>
           } @else if (currentPoke) {
             <img
@@ -50,6 +55,7 @@
           }
         </div>
       </div>
+
 
 
       <!-- PANTALLA INFERIOR (lista o detalle) -->
